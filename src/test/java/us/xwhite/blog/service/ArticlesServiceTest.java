@@ -21,18 +21,18 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import us.xwhite.blog.domain.Article;
 import us.xwhite.blog.domain.Author;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import us.xwhite.blog.App;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
  * @author Joel Crosswhite <joel.crosswhite at ix.netcom.com
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(App.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = WebEnvironment.NONE)
 public class ArticlesServiceTest {
 
     @Autowired
