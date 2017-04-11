@@ -16,6 +16,7 @@
 package us.xwhite.blog.service;
 
 import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
 import us.xwhite.blog.domain.Article;
 
 /**
@@ -28,5 +29,6 @@ public interface ArticlesService {
 
     public Article getArticle(Long id);
 
+    @PreAuthorize("hasRole('author')")
     public Article saveArticle(Article article);
 }

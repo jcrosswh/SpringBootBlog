@@ -23,6 +23,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import us.xwhite.blog.domain.Article;
 import us.xwhite.blog.domain.Author;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -33,6 +36,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@ActiveProfiles("test")
 public class ArticlesServiceTest {
 
     @Autowired
@@ -63,9 +67,22 @@ public class ArticlesServiceTest {
             assertEquals((long) (i + 1), (long) allArticles.get(i).getId());
         }
     }
+    
+    @Test(expected = AccessDeniedException.class)
+    @Transactional
+    @WithMockUser(username = "jcrosswh")
+    public void save_unauthorized() {
+        Author author = articlesService.getArticle(13L).getAuthor();
+        Article article = new Article(); //"What I Learned in Java Today", "Java so rocks!", author, null);
+        article.setTitle("What I Learned in Java Today");
+        article.setContent("Java so rocks!");
+        article.setAuthor(author);
+        articlesService.saveArticle(article);
+    }
 
     @Test
     @Transactional
+    @WithMockUser(username = "jcrosswh", roles = { "author" })
     public void save() {
         Author author = articlesService.getArticle(13L).getAuthor();
         Article article = new Article(); //"What I Learned in Java Today", "Java so rocks!", author, null);

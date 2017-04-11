@@ -16,6 +16,7 @@
 package us.xwhite.blog.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,6 +35,11 @@ public class AppWideExceptionHandler {
     public @ResponseBody Error articleNotFoundHandler(ArticleNotFoundException e) {
         Long articleId = e.getArticleId();
         return new Error("Article [" + articleId.toString() + "] not found");
+    }
+    
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public void notAuthorizedHandler(AccessDeniedException e) {
     }
 
     @ExceptionHandler(Exception.class)
